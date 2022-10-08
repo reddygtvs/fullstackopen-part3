@@ -1,7 +1,17 @@
 const express = require("express");
+var morgan = require("morgan");
 const app = express();
 
+const requestLogger = (request, response, next) => {
+  console.log("Method:", request.method);
+  console.log("Path:  ", request.path);
+  console.log("Body  ", request.body);
+  console.log("---");
+  next();
+};
 app.use(express.json());
+app.use(requestLogger);
+app.use(morgan("tiny"));
 
 let persons = [
   {
@@ -50,7 +60,10 @@ app.get("/api/persons/:id", (request, response) => {
   if (person) {
     response.json(person);
   } else {
-    response.status(404).end();
+    //response.status(404).end();
+    return response.status(404).json({
+      error: "Invalid ID",
+    });
   }
 });
 const generateId = () => {
@@ -85,6 +98,12 @@ app.delete("/api/persons/:id", (request, response) => {
 
   response.status(204).end();
 });
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
 
 const PORT = 3001;
 app.listen(PORT);
