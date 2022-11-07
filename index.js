@@ -25,8 +25,6 @@ app.get("/api/info", (request, response) => {
 
 app.get("/api/persons", (request, response) => {
   Person.find({}).then((person) => {
-    //response.json(person.map((perso) => perso.toJSON()));
-    debugger;
     response.json(person);
   });
 });
@@ -49,7 +47,9 @@ app.post("/api/persons", (request, response) => {
     number: info.number,
   });
   person.save().then((newPerson) => {
-    response.json(newPerson);
+    Person.find({}).then((person) => {
+      response.json(person);
+    });
   });
 
   //.catch((error) => console.log(error));
