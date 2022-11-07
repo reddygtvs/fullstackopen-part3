@@ -15,14 +15,9 @@ if (process.argv.length == 4) {
 
 const password = process.argv[2];
 
-const generateId = () => {
-  return Math.floor(Math.random() * 100000);
-};
-
 const url = `mongodb+srv://sskhynix-phonebook:${password}@cluster0.ke4i12v.mongodb.net/?retryWrites=true&w=majority`;
 
 const personSchema = new mongoose.Schema({
-  id: Number,
   name: String,
   number: String,
 });
@@ -36,7 +31,6 @@ if (process.argv.length == 5) {
       console.log("connected");
 
       const person = new Person({
-        id: generateId(),
         name: process.argv[3],
         number: process.argv[4],
       });

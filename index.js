@@ -1,48 +1,13 @@
+require("dotenv").config();
 const express = require("express");
-var morgan = require("morgan");
 const cors = require("cors");
+const Person = require("./models/person");
 
 const app = express();
 app.use(cors());
 app.use(express.static("build"));
 
-const requestLogger = (request, response, next) => {
-  console.log("Method:", request.method);
-  console.log("Path:  ", request.path);
-  console.log("Body  ", request.body);
-  console.log("---");
-  next();
-};
-
 app.use(express.json());
-app.use(requestLogger);
-morgan.token("body", (req, res) => JSON.stringify(req.body));
-app.use(
-  morgan(":method :url :status :response-time ms - :res[content-length] :body")
-);
-
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
 
 app.get("/", (request, response) => {
   response.send("<h1>Welcome to the PhoneBook API<h1>");
@@ -59,7 +24,10 @@ app.get("/api/info", (request, response) => {
 });
 
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Person.find({}).then((person) => {
+    //response.json(person.map((perso) => perso.toJSON()));
+    response.json(person);
+  });
 });
 
 app.get("/api/persons/:id", (request, response) => {
