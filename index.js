@@ -26,25 +26,17 @@ app.get("/api/info", (request, response) => {
 app.get("/api/persons", (request, response) => {
   Person.find({}).then((person) => {
     //response.json(person.map((perso) => perso.toJSON()));
+    debugger;
     response.json(person);
   });
 });
 
 app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const person = persons.find((person) => person.id === id);
-  if (person) {
+  Person.findById(request.params.id).then((person) => {
     response.json(person);
-  } else {
-    //response.status(404).end();
-    return response.status(404).json({
-      error: "Invalid ID",
-    });
-  }
+  });
 });
-const generateId = () => {
-  return Math.floor(Math.random() * 100000);
-};
+
 app.post("/api/persons", (request, response) => {
   const info = request.body;
   if (!info.name || !info.number) {
@@ -52,20 +44,15 @@ app.post("/api/persons", (request, response) => {
       error: "Name or Number empty",
     });
   }
-  const found = persons.find((person) => person.name === info.name);
-  if (found) {
-    return response.status(403).json({
-      error: "Name already exists in phonebook",
-    });
-  }
-  let person = {
-    id: generateId(),
+  const person = new Person({
     name: info.name,
     number: info.number,
-  };
-  persons = persons.concat(person);
-  console.log(persons);
-  response.json(persons);
+  });
+  person.save().then((newPerson) => {
+    response.json(newPerson);
+  });
+
+  //.catch((error) => console.log(error));
 });
 
 app.delete("/api/persons/:id", (request, response) => {
