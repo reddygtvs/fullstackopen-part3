@@ -15,11 +15,11 @@ app.get("/", (request, response) => {
 
 app.get("/api/info", (request, response) => {
   const fetchTime = new Date();
-  const size = Object.keys(persons).length;
-  console.log(fetchTime);
-  console.log(size);
-  response.send(`<h2>Phonebook has info for ${size} people</h2>
-  <h2>${fetchTime}`);
+  Person.count({}).then((size) =>
+    response.send(`<h2>Phonebook has info for ${size} people</h2>
+  <h2>${fetchTime}`)
+  );
+
   //response.json(`<h3></h3>`)
 });
 
