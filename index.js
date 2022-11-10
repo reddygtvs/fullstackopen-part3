@@ -19,8 +19,6 @@ app.get("/api/info", (request, response) => {
     response.send(`<h2>Phonebook has info for ${size} people</h2>
   <h2>${fetchTime}`)
   );
-
-  //response.json(`<h3></h3>`)
 });
 
 app.get("/api/persons", (request, response) => {
@@ -62,8 +60,6 @@ app.post("/api/persons", (request, response, next) => {
         .catch((error) => next(error));
     })
     .catch((error) => next(error));
-
-  //.catch((error) => console.log(error));
 });
 
 app.put("/api/persons/:id", (request, response, next) => {
@@ -115,6 +111,3 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-//const PORT = 3001;
-//app.listen(PORT);
-//console.log(`Server running on port ${PORT}`);
