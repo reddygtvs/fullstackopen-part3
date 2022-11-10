@@ -18,7 +18,16 @@ const personSchema = new mongoose.Schema({
     minLength: 3,
     required: true,
   },
-  number: String,
+  number: {
+    type: String,
+    minLength: 9,
+    validate: {
+      validator: function (v) {
+        return /\d{2,3}-\d{5,}/.test(v);
+      },
+      message: (props) => "enter valid format: xx-xxx...., at least 8 numbers",
+    },
+  },
 });
 personSchema.options.toJSON = {
   transform: (document, returnedObject) => {
